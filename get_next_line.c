@@ -49,11 +49,13 @@ char	*read_line(int fd, char *line)
 	while (1)
 	{
 		size_read = read(fd, buf, BUFFER_SIZE);
-		if (size_read <= 0)
+		if (size_read == -1)
 		{
 			free(line);
 			return (NULL);
 		}
+		if (size_read == 0)
+			return (line);
 		line = line_create(line, buf);
 		if (!pos_newline(buf))
 			continue;
@@ -70,10 +72,10 @@ char	*parse_line(char *buffer)
 	if (!buffer)
 		return (NULL);
 	line_length = pos_newline(buffer) - buffer;
-	line = calloc(1, line_length + 1);
+	line = calloc(1, line_length + 2);
 	if (!line)
 		return (NULL);
-	strncpy(line, buffer, line_length);
+	strncpy(line, buffer, line_length + 1);
 
 	return (line);
 }
@@ -89,7 +91,6 @@ char	*fix_ptr(char *buffer)
 	line_length = pos_newline(buffer) - buffer;
 	line_length++;
 	buf_len = strlen(buffer);
-	//printf("line_length: %ld, buf_len: %ld", line_length, strlen(buffer));
 	if (line_length <= buf_len)
 	{
 		fixed_buf = calloc(1, buf_len - line_length + 1);
@@ -108,6 +109,9 @@ char	*get_next_line(int fd)
 	static char *buf;
 	char		*line;
 
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+
 	buf = read_line(fd, buf);
 	line = parse_line(buf);
 	buf = fix_ptr(buf);
@@ -122,7 +126,7 @@ int main(int argc, char **argv)
 	int fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
 		return (0);
-	while (i < 5)
+	while (i < 4)
 	{
 		char *line = get_next_line(fd);
 		printf("line[%d]: %s\n", i, line);
