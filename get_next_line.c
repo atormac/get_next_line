@@ -87,7 +87,7 @@ char	*fix_ptr(char *buffer)
 		return (NULL);
 	line_length = pos_newline(buffer) - buffer;
 	line_length++;
-	if (line_length < BUFFER_SIZE)
+	if (line_length <= BUFFER_SIZE)
 	{
 		fixed_buf = calloc(1, BUFFER_SIZE - line_length + 1);
 		if (!fixed_buf)
