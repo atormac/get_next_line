@@ -82,20 +82,24 @@ char	*fix_ptr(char *buffer)
 {
 	char	*fixed_buf;
 	size_t	line_length;
+	size_t	buf_len;
 
 	if (!buffer)
 		return (NULL);
 	line_length = pos_newline(buffer) - buffer;
 	line_length++;
-	if (line_length <= BUFFER_SIZE)
+	buf_len = strlen(buffer);
+	//printf("line_length: %ld, buf_len: %ld", line_length, strlen(buffer));
+	if (line_length <= buf_len)
 	{
-		fixed_buf = calloc(1, BUFFER_SIZE - line_length + 1);
+		fixed_buf = calloc(1, buf_len - line_length + 1);
 		if (!fixed_buf)
 			return (NULL);
 		strcpy(fixed_buf, buffer + line_length);
 		free(buffer);
 		return (fixed_buf);
 	}
+	*buffer = 0;
 	return (buffer);
 }
 
@@ -118,7 +122,7 @@ int main(int argc, char **argv)
 	int fd = open(argv[1], O_RDONLY);
 	if (fd < 0)
 		return (0);
-	while (i < 4)
+	while (i < 5)
 	{
 		char *line = get_next_line(fd);
 		printf("line[%d]: %s\n", i, line);
