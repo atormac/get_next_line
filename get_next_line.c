@@ -22,9 +22,11 @@ char	*pos_newline(char *str)
 char	*line_create(char *s1, char *s2)
 {
 	char	*str;
-	int	s1_len = strlen(s1);
-	int s2_len = strlen(s2);
+	size_t	s1_len;
+	size_t	s2_len;
 
+	s1_len = strlen(s1);
+	s2_len = strlen(s2);
 	str = calloc(1, s1_len + s2_len + 1);
 	if (!str)
 		return (NULL);
@@ -88,8 +90,7 @@ char	*fix_ptr(char *buffer)
 
 	if (!buffer)
 		return (NULL);
-	line_length = pos_newline(buffer) - buffer;
-	line_length++;
+	line_length = (pos_newline(buffer) - buffer) + 1;
 	buf_len = strlen(buffer);
 	if (line_length <= buf_len)
 	{
