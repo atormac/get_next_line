@@ -1,23 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: atorma <atorma@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/21 13:42:12 by atorma            #+#    #+#             */
-/*   Updated: 2024/04/21 14:27:00 by atorma           ###   ########.fr       */
+/*   Created: 2024/04/21 14:18:11 by atorma            #+#    #+#             */
+/*   Updated: 2024/04/21 14:26:48 by atorma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-#define GET_NEXT_LINE_H
+#include "get_next_line.h"
+#include <string.h>
 
-#include <stdlib.h>
-#include <unistd.h>
+size_t	ft_strlen(char *str)
+{
+	char	*s;
 
-char	*get_next_line(int fd);
-size_t	ft_strlen(char *str);
-void	*ft_calloc(size_t count, size_t size);
+	s = str;
+	while (*s)
+		s++;
+	return (s - str);
+}
 
-#endif
+void	*ft_calloc(size_t count, size_t size)
+{
+	void	*p;
+
+	if (count && SIZE_MAX / count < size)
+		return (NULL);
+	p = malloc(count * size);
+	if (!p)
+		return (NULL);
+	memset(p, 0, count * size);
+	return (p);
+}
