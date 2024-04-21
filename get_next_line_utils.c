@@ -12,6 +12,7 @@
 
 #include "get_next_line.h"
 #include <string.h>
+#include <stdint.h>
 
 size_t	ft_strlen(char *str)
 {

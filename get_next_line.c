@@ -144,9 +144,11 @@ char	*get_next_line(int fd)
 int main(int argc, char **argv)
 {
 	int	i = 0;
-	if (argc != 2)
-		return (0);
-	int fd = open(argv[1], O_RDONLY);
+	int	fd = -1;
+	if (argc == 2)
+		fd = open(argv[1], O_RDONLY);
+	else if (argc == 1)
+		fd = STDIN_FILENO;
 	if (fd < 0)
 		return (0);
 	while (1)
