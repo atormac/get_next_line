@@ -6,7 +6,7 @@
 /*   By: atorma <atorma@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 13:42:02 by atorma            #+#    #+#             */
-/*   Updated: 2024/04/21 15:23:22 by atorma           ###   ########.fr       */
+/*   Updated: 2024/04/22 15:49:44 by atorma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,10 @@
 
 #define BUFFER_SIZE 8
 
-char	*pos_newline(char *str)
-{
-	if (!str)
-		return (NULL);
-	while (*str)
-	{
-		if (*str == '\n')
-			return (str);
-		str++;
-	}
-	return (NULL);
-}
+char	*pos_newline(char *str);
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
+size_t	ft_strlen(char *str);
+void	*ft_calloc(size_t count, size_t size);
 
 char	*line_create(char *s1, char *s2)
 {
@@ -41,9 +33,12 @@ char	*line_create(char *s1, char *s2)
 	s2_len = ft_strlen(s2);
 	str = ft_calloc(1, s1_len + s2_len + 1);
 	if (!str)
+	{
+		free(s1);
 		return (NULL);
-	strcpy(str, s1);
-	strcat(str, s2);
+	}
+	ft_strlcpy(str, s1, s1_len + 1);
+	ft_strlcpy(str + s1_len, s2, s2_len + 1);
 	free(s1);
 	return (str);
 }
@@ -53,15 +48,8 @@ char	*read_line(int fd, char *line)
 	ssize_t	size_read;
 	char	buf[BUFFER_SIZE + 1];
 
-	if (line == NULL)
-	{
-		line = ft_calloc(1, BUFFER_SIZE + 1);
-		if (!line)
-			return (NULL);
-	}
 	while (1)
 	{
-		memset(buf, 0, BUFFER_SIZE + 1);
 		size_read = read(fd, buf, BUFFER_SIZE);
 		if (size_read == -1)
 		{
@@ -70,56 +58,52 @@ char	*read_line(int fd, char *line)
 		}
 		if (size_read == 0)
 			return (line);
+		buf[size_read] = 0;
 		line = line_create(line, buf);
-		if (!pos_newline(line))
-			continue;
-		break;
+		if (!line)
+			return (NULL);
+		if (pos_newline(buf))
+			break ;
 	}
 	return (line);
 }
 
-char	*parse_line(char *buffer, char **buffer_ptr)
+char	*parse_line(char *buffer, size_t buf_len)
 {
 	char	*line;
+	char	*line_break;
 	size_t	line_length;
-	size_t	buf_len;
 
-	if (!buffer)
-		return (NULL);
-	buf_len = ft_strlen(buffer);
 	if (buf_len <= 0)
-	{
-		free(buffer);
-		*buffer_ptr = NULL;
 		return (NULL);
-	}
-	line_length = pos_newline(buffer) - buffer;
-	if (pos_newline(buffer) == NULL)
+	line_break = pos_newline(buffer);
+	line_length = line_break - buffer;
+	if (line_break == NULL)
+	{
 		line_length = buf_len;
+		line_length--;
+	}
 	line = ft_calloc(1, line_length + 2);
 	if (!line)
 		return (NULL);
-	strncpy(line, buffer, line_length + 1);
-
+	ft_strlcpy(line, buffer, line_length + 2);
 	return (line);
 }
 
-char	*fix_ptr(char *buffer)
+char	*trim_buffer(char *buffer, size_t buf_len)
 {
 	char	*fixed_buf;
 	size_t	line_length;
-	size_t	buf_len;
 
 	if (!buffer)
 		return (NULL);
 	line_length = (pos_newline(buffer) - buffer) + 1;
-	buf_len = ft_strlen(buffer);
 	if (line_length <= buf_len)
 	{
 		fixed_buf = ft_calloc(1, buf_len - line_length + 1);
 		if (!fixed_buf)
 			return (NULL);
-		strcpy(fixed_buf, buffer + line_length);
+		ft_strlcpy(fixed_buf, buffer + line_length, buf_len - line_length + 1);
 		free(buffer);
 		return (fixed_buf);
 	}
@@ -129,37 +113,28 @@ char	*fix_ptr(char *buffer)
 
 char	*get_next_line(int fd)
 {
-	static char *buf;
+	static char	*buf;
+	size_t		buf_len;
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-
-	buf = read_line(fd, buf);
-	line = parse_line(buf, &buf);
-	buf = fix_ptr(buf);
-	return (line);
-}
-
-int main(int argc, char **argv)
-{
-	int	i = 0;
-	int	fd = -1;
-	if (argc == 2)
-		fd = open(argv[1], O_RDONLY);
-	else if (argc == 1)
-		fd = STDIN_FILENO;
-	if (fd < 0)
-		return (0);
-	while (1)
+	if (buf == NULL)
 	{
-		char *line = get_next_line(fd);
-		if (!line)
-			break;
-		printf("line[%d]: %s", i, line);
-		free(line);
-		i++;
+		buf = ft_calloc(1, BUFFER_SIZE + 1);
+		if (!buf)
+			return (NULL);
 	}
-	close(fd);
-	return (0);
+	buf = read_line(fd, buf);
+	if (!buf)
+		return (NULL);
+	buf_len = ft_strlen(buf);
+	line = parse_line(buf, buf_len);
+	if (line == NULL)
+	{
+		free(buf);
+		buf = NULL;
+	}
+	buf = trim_buffer(buf, buf_len);
+	return (line);
 }
