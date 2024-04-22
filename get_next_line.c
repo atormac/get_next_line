@@ -6,7 +6,7 @@
 /*   By: atorma <atorma@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 13:42:02 by atorma            #+#    #+#             */
-/*   Updated: 2024/04/22 15:49:44 by atorma           ###   ########.fr       */
+/*   Updated: 2024/04/22 16:01:01 by atorma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,11 +130,11 @@ char	*get_next_line(int fd)
 		return (NULL);
 	buf_len = ft_strlen(buf);
 	line = parse_line(buf, buf_len);
-	if (line == NULL)
+	buf = trim_buffer(buf, buf_len);
+	if (!buf || !line)
 	{
 		free(buf);
 		buf = NULL;
 	}
-	buf = trim_buffer(buf, buf_len);
 	return (line);
 }
