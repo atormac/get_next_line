@@ -6,15 +6,13 @@
 /*   By: atorma <atorma@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 13:42:02 by atorma            #+#    #+#             */
-/*   Updated: 2024/04/22 17:22:35 by atorma           ###   ########.fr       */
+/*   Updated: 2024/04/22 17:27:19 by atorma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
 #include <fcntl.h>
-
-#define BUFFER_SIZE 1
 
 char	*pos_newline(char *str);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
@@ -119,11 +117,11 @@ char	*get_next_line(int fd)
 		return (NULL);
 	buf_len = ft_strlen(buf);
 	line = dup_line(buf, buf_len);
-	buf = move_remaining(buf, buf_len);
-	if (!buf || !line)
+	if (!line)
 	{
 		free(buf);
 		buf = NULL;
 	}
+	move_remaining(buf, buf_len);
 	return (line);
 }
