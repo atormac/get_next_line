@@ -6,7 +6,7 @@
 /*   By: atorma <atorma@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 13:42:02 by atorma            #+#    #+#             */
-/*   Updated: 2024/04/22 17:27:19 by atorma           ###   ########.fr       */
+/*   Updated: 2024/04/22 17:37:03 by atorma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,19 +83,19 @@ char	*dup_line(char *buffer, size_t buf_len)
 	return (line);
 }
 
-char	*move_remaining(char *buffer, size_t buf_len)
+void	move_remaining(char *buffer, size_t buf_len
 {
 	size_t	line_length;
 	char	*line_break;
 
 	if (!buffer)
-		return (NULL);
+		return ;
 	line_break = pos_newline(buffer);
 	line_length = buf_len;
 	if (line_break)
 		line_length = (line_break - buffer) + 1;
 	ft_strlcpy(buffer, buffer + line_length, buf_len - line_length + 1);
-	return (buffer);
+	return ;
 }
 
 char	*get_next_line(int fd)
