@@ -83,7 +83,7 @@ char	*dup_line(char *buffer, size_t buf_len)
 	return (line);
 }
 
-void	move_remaining(char *buffer, size_t buf_len
+void	move_remaining(char *buffer, size_t buf_len)
 {
 	size_t	line_length;
 	char	*line_break;
