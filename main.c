@@ -25,7 +25,7 @@ int main(int argc, char **argv)
 		fd = STDIN_FILENO;
 	if (fd < 0)
 		return (0);
-	while (1)
+	while (i < 5)
 	{
 		char *line = get_next_line(fd);
 		if (!line)
