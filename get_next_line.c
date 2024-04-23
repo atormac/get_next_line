@@ -6,7 +6,7 @@
 /*   By: atorma <atorma@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 13:42:02 by atorma            #+#    #+#             */
-/*   Updated: 2024/04/22 17:37:03 by atorma           ###   ########.fr       */
+/*   Updated: 2024/04/23 14:22:15 by atorma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ char	*dup_line(char *buffer, size_t buf_len)
 	return (line);
 }
 
-void	move_remaining(char *buffer, size_t buf_len
+void	move_remaining(char *buffer, size_t buf_len)
 {
 	size_t	line_length;
 	char	*line_break;
