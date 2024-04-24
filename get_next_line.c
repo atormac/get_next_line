@@ -39,10 +39,13 @@ static char	*line_join(char *s1, size_t s1_len, char *s2, size_t s2_len)
 
 static char	*read_line(int fd, char *buf)
 {
-	char	tmp_buf[BUFFER_SIZE + 1];
+	char	*tmp_buf;
 	ssize_t	size_read;
 	ssize_t	total_read;
 
+	tmp_buf = malloc(BUFFER_SIZE + 1);
+	if (!tmp_buf)
+		return (NULL);
 	total_read = ft_strlen(buf);
 	while (1)
 	{
@@ -55,6 +58,7 @@ static char	*read_line(int fd, char *buf)
 		if (!buf || pos_newline(tmp_buf))
 			break ;
 	}
+	free(tmp_buf);
 	return (buf);
 }
 
