@@ -6,7 +6,7 @@
 /*   By: atorma <atorma@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 13:42:02 by atorma            #+#    #+#             */
-/*   Updated: 2024/04/24 14:55:03 by atorma           ###   ########.fr       */
+/*   Updated: 2024/04/24 15:41:21 by atorma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 size_t	ft_strlen(char *str);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
 
-static char *line_join(char *s1, size_t s1_len, char *s2, size_t s2_len)
+static char	*line_join(char *s1, size_t s1_len, char *s2, size_t s2_len)
 {
 	char	*ret;
 
@@ -39,7 +39,7 @@ static char	*read_line(int fd, char *buf)
 {
 	char	tmp_buf[BUFFER_SIZE + 1];
 	ssize_t	size_read;
-	ssize_t total_read;
+	ssize_t	total_read;
 
 	total_read = ft_strlen(buf);
 	while (1)
