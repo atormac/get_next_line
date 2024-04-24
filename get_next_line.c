@@ -6,7 +6,7 @@
 /*   By: atorma <atorma@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 13:42:02 by atorma            #+#    #+#             */
-/*   Updated: 2024/04/24 15:41:21 by atorma           ###   ########.fr       */
+/*   Updated: 2024/04/24 15:55:14 by atorma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ char	*get_next_line(int fd)
 	}
 	buf = read_line(fd, buf);
 	line = dup_line(buf);
-	if (!line)
+	if (!pos_newline(line))
 	{
 		free(buf);
 		buf = NULL;
