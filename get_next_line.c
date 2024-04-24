@@ -17,14 +17,12 @@ char	*pos_newline(char *str);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 size_t	ft_strlen(char *str);
 
-static char	*line_create(char *s1, char *s2)
+static char	*line_create(char *s1, char *s2, size_t s2_len)
 {
 	char	*str;
 	size_t	s1_len;
-	size_t	s2_len;
 
 	s1_len = ft_strlen(s1);
-	s2_len = ft_strlen(s2);
 	str = malloc(s1_len + s2_len + 1);
 	if (!str)
 	{
@@ -48,7 +46,7 @@ static char	*read_line(int fd, char *buf)
 		if (size_read <= 0)
 			break ;
 		tmp_buf[size_read] = 0;
-		buf = line_create(buf, tmp_buf);
+		buf = line_create(buf, tmp_buf, size_read);
 		if (!buf || pos_newline(tmp_buf))
 			break ;
 	}
