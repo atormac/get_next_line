@@ -6,13 +6,12 @@
 /*   By: atorma <atorma@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 14:18:11 by atorma            #+#    #+#             */
-/*   Updated: 2024/04/24 14:54:56 by atorma           ###   ########.fr       */
+/*   Updated: 2024/04/24 17:52:32 by atorma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <string.h>
-#include <stdint.h>
+#include <stddef.h>
 
 void	*ft_memcpy(void *dst, const void *src, size_t n)
 {

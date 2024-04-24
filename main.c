@@ -6,14 +6,17 @@
 /*   By: atorma <atorma@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 15:25:51 by atorma            #+#    #+#             */
-/*   Updated: 2024/04/22 16:26:37 by atorma           ###   ########.fr       */
+/*   Updated: 2024/04/24 17:54:35 by atorma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
+#include "get_next_line.h"
+#include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>
-#include "get_next_line.h"
+#include <stdlib.h>
+#include <limits.h>
 
 int main(int argc, char **argv)
 {
