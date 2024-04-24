@@ -6,13 +6,27 @@
 /*   By: atorma <atorma@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 14:18:11 by atorma            #+#    #+#             */
-/*   Updated: 2024/04/22 14:52:07 by atorma           ###   ########.fr       */
+/*   Updated: 2024/04/24 14:54:56 by atorma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <string.h>
 #include <stdint.h>
+
+void	*ft_memcpy(void *dst, const void *src, size_t n)
+{
+	register unsigned char	*p1;
+	register unsigned char	*p2;
+
+	if (!dst && !src)
+		return (0);
+	p1 = (unsigned char *)dst;
+	p2 = (unsigned char *)src;
+	while (n--)
+		*p1++ = *p2++;
+	return (dst);
+}
 
 size_t	ft_strlen(char *str)
 {

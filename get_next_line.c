@@ -6,7 +6,7 @@
 /*   By: atorma <atorma@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 13:42:02 by atorma            #+#    #+#             */
-/*   Updated: 2024/04/23 20:14:38 by atorma           ###   ########.fr       */
+/*   Updated: 2024/04/24 14:55:03 by atorma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,37 +16,40 @@
 char	*pos_newline(char *str);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 size_t	ft_strlen(char *str);
+void	*ft_memcpy(void *dst, const void *src, size_t n);
 
-static char	*line_create(char *s1, char *s2, size_t s2_len)
+static char *line_join(char *s1, size_t s1_len, char *s2, size_t s2_len)
 {
-	char	*str;
-	size_t	s1_len;
+	char	*ret;
 
-	s1_len = ft_strlen(s1);
-	str = malloc(s1_len + s2_len + 1);
-	if (!str)
+	ret = malloc(s1_len + s2_len + 1);
+	if (!ret)
 	{
 		free(s1);
 		return (NULL);
 	}
-	ft_strlcpy(str, s1, s1_len + 1);
-	ft_strlcpy(str + s1_len, s2, s2_len + 1);
+	ft_memcpy(ret, s1, s1_len);
+	ft_memcpy(ret + s1_len, s2, s2_len);
+	ret[s1_len + s2_len] = 0;
 	free(s1);
-	return (str);
+	return (ret);
 }
 
 static char	*read_line(int fd, char *buf)
 {
 	char	tmp_buf[BUFFER_SIZE + 1];
 	ssize_t	size_read;
+	ssize_t total_read;
 
+	total_read = ft_strlen(buf);
 	while (1)
 	{
 		size_read = read(fd, tmp_buf, BUFFER_SIZE);
 		if (size_read <= 0)
 			break ;
 		tmp_buf[size_read] = 0;
-		buf = line_create(buf, tmp_buf, size_read);
+		buf = line_join(buf, total_read, tmp_buf, size_read);
+		total_read += size_read;
 		if (!buf || pos_newline(tmp_buf))
 			break ;
 	}
