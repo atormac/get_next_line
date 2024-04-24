@@ -51,6 +51,8 @@ static char	*read_line(int fd, char *buf)
 	while (1)
 	{
 		size_read = read(fd, tmp_buf, BUFFER_SIZE);
+		if (size_read == -1)
+			buf[0] = 0;
 		if (size_read <= 0)
 			break ;
 		tmp_buf[size_read] = 0;
@@ -70,11 +72,9 @@ static char	*dup_line(char *buffer)
 	size_t	line_length;
 	size_t	buf_len;
 
-	if (!buffer)
+	if (!buffer || *buffer == 0)
 		return (NULL);
 	buf_len = ft_strlen(buffer);
-	if (buf_len == 0)
-		return (NULL);
 	line_break = pos_newline(buffer);
 	line_length = line_break - buffer;
 	if (!line_break)
