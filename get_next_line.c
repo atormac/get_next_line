@@ -45,7 +45,7 @@ static char	*read_line(int fd, char *buf)
 
 	tmp_buf = malloc(BUFFER_SIZE + 1);
 	if (!tmp_buf)
-		return (NULL);
+		return (buf);
 	total_read = ft_strlen(buf);
 	while (1)
 	{

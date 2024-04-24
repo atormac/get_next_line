@@ -28,11 +28,9 @@ int main(int argc, char **argv)
 		fd = STDIN_FILENO;
 	if (fd < 0)
 		return (0);
-	while (i < 5)
+	char	*line = NULL;
+	while ((line = get_next_line(fd)) != NULL)
 	{
-		char *line = get_next_line(fd);
-		if (!line)
-			break;
 		printf("line[%d]: %s", i, line);
 		free(line);
 		i++;

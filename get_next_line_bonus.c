@@ -46,7 +46,7 @@ static char	*read_line(int fd, char *buf)
 
 	tmp_buf = malloc(BUFFER_SIZE + 1);
 	if (!tmp_buf)
-		return (NULL);
+		return (buf);
 	total_read = ft_strlen(buf);
 	while (1)
 	{
@@ -89,10 +89,10 @@ static char	*dup_line(char *buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*buf[OPEN_MAX];
+	static char	*buf[4096];
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= OPEN_MAX)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= 4096)
 		return (NULL);
 	if (buf[fd] == NULL)
 	{
