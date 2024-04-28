@@ -37,15 +37,17 @@ static char	*line_join(char *s1, size_t s1_len, char *s2, size_t s2_len)
 	return (ret);
 }
 
-static char	*read_line(int fd, char *buf)
+static char	*read_line(int fd, char *buf, size_t buf_size)
 {
-	char	tmp_buf[BUFFER_SIZE + 1];
+	char	*tmp_buf;
 	ssize_t	size_read;
-	ssize_t	total_read;
 
-	if (pos_newline(buf))
+	tmp_buf = malloc(BUFFER_SIZE + 1);
+	if (!tmp_buf)
+	{
+		buf[0] = 0;
 		return (buf);
-	total_read = ft_strlen(buf);
+	}
 	while (1)
 	{
 		size_read = read(fd, tmp_buf, BUFFER_SIZE);
@@ -54,11 +56,12 @@ static char	*read_line(int fd, char *buf)
 		if (size_read <= 0)
 			break ;
 		tmp_buf[size_read] = 0;
-		buf = line_join(buf, total_read, tmp_buf, size_read);
-		total_read += size_read;
+		buf = line_join(buf, buf_size, tmp_buf, size_read);
+		buf_size += size_read;
 		if (!buf || pos_newline(tmp_buf))
 			break ;
 	}
+	free(tmp_buf);
 	return (buf);
 }
 
@@ -69,7 +72,7 @@ static char	*dup_line(char *buffer)
 	size_t	line_length;
 	size_t	buf_len;
 
-	if (!buffer || *buffer == 0)
+	if (!buffer || buffer[0] == '\0')
 		return (NULL);
 	buf_len = ft_strlen(buffer);
 	line_break = pos_newline(buffer);
@@ -87,6 +90,7 @@ static char	*dup_line(char *buffer)
 char	*get_next_line(int fd)
 {
 	static char	*buf;
+	size_t		buf_size;
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
@@ -98,9 +102,11 @@ char	*get_next_line(int fd)
 			return (NULL);
 		buf[0] = 0;
 	}
-	buf = read_line(fd, buf);
+	buf_size = ft_strlen(buf);
+	if (!pos_newline(buf))
+		buf = read_line(fd, buf, buf_size);
 	line = dup_line(buf);
-	if (!pos_newline(line))
+	if (buf && !pos_newline(line))
 	{
 		free(buf);
 		buf = NULL;
