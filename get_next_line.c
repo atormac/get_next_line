@@ -6,7 +6,7 @@
 /*   By: atorma <atorma@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/21 13:42:02 by atorma            #+#    #+#             */
-/*   Updated: 2024/04/24 18:35:36 by atorma           ###   ########.fr       */
+/*   Updated: 2024/05/01 18:48:42 by atorma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,44 +37,39 @@ static char	*line_join(char *s1, size_t s1_len, char *s2, size_t s2_len)
 	return (ret);
 }
 
-static char	*read_line(int fd, char *buf, size_t buf_size)
+static char	*read_line(int fd, char *rem, char *buf, size_t *buf_size)
 {
-	char	*tmp_buf;
+	char	tmp_buf[BUFFER_SIZE + 1];
 	ssize_t	size_read;
 
-	tmp_buf = malloc(BUFFER_SIZE + 1);
-	if (!tmp_buf)
-	{
-		buf[0] = 0;
-		return (buf);
-	}
 	while (1)
 	{
 		size_read = read(fd, tmp_buf, BUFFER_SIZE);
 		if (size_read == -1)
-			buf[0] = 0;
+		{
+			free(buf);
+			rem[0] = 0;
+			return (NULL);
+		}
 		if (size_read <= 0)
 			break ;
 		tmp_buf[size_read] = 0;
-		buf = line_join(buf, buf_size, tmp_buf, size_read);
-		buf_size += size_read;
+		buf = line_join(buf, *buf_size, tmp_buf, size_read);
+		*buf_size += size_read;
 		if (!buf || pos_newline(tmp_buf))
 			break ;
 	}
-	free(tmp_buf);
 	return (buf);
 }
 
-static char	*dup_line(char *buffer)
+static char	*dup_line(char *buffer, char *rem, size_t buf_len)
 {
 	char	*line;
 	char	*line_break;
 	size_t	line_length;
-	size_t	buf_len;
 
 	if (!buffer || buffer[0] == '\0')
 		return (NULL);
-	buf_len = ft_strlen(buffer);
 	line_break = pos_newline(buffer);
 	line_length = line_break - buffer;
 	if (!line_break)
@@ -82,34 +77,34 @@ static char	*dup_line(char *buffer)
 	line = malloc(line_length + 2);
 	if (!line)
 		return (NULL);
-	ft_strlcpy(line, buffer, line_length + 2);
-	ft_strlcpy(buffer, buffer + line_length + 1, buf_len - line_length + 2);
+	ft_memcpy(line, buffer, line_length + 1);
+	line[line_length + 1] = 0;
+	if (buf_len > (line_length + 1))
+		ft_strlcpy(rem, buffer + line_length + 1, buf_len - line_length + 2);
+	else
+		rem[0] = 0;
 	return (line);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*buf;
+	static char	rem[BUFFER_SIZE + 1];
+	char		*buf;
 	size_t		buf_size;
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (buf == NULL)
-	{
-		buf = malloc(BUFFER_SIZE + 1);
-		if (!buf)
-			return (NULL);
-		buf[0] = 0;
-	}
-	buf_size = ft_strlen(buf);
-	if (!pos_newline(buf))
-		buf = read_line(fd, buf, buf_size);
-	line = dup_line(buf);
-	if (buf && !pos_newline(line))
-	{
-		free(buf);
-		buf = NULL;
-	}
+	buf_size = ft_strlen(rem);
+	if (buf_size > 0 && pos_newline(rem))
+		return (dup_line(rem, rem, buf_size));
+	buf = malloc(BUFFER_SIZE + 1);
+	if (!buf)
+		return (NULL);
+	ft_memcpy(buf, rem, buf_size);
+	buf[buf_size] = 0;
+	buf = read_line(fd, rem, buf, &buf_size);
+	line = dup_line(buf, rem, buf_size);
+	free(buf);
 	return (line);
 }

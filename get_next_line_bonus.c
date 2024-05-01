@@ -6,7 +6,7 @@
 /*   By: atorma <atorma@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 19:17:48 by atorma            #+#    #+#             */
-/*   Updated: 2024/04/24 19:17:55 by atorma           ###   ########.fr       */
+/*   Updated: 2024/05/01 15:58:20 by atorma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <limits.h>
 
 char	*pos_newline(char *str);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
@@ -40,15 +39,9 @@ static char	*line_join(char *s1, size_t s1_len, char *s2, size_t s2_len)
 
 static char	*read_line(int fd, char *buf, size_t buf_size)
 {
-	char	*tmp_buf;
+	char	tmp_buf[BUFFER_SIZE + 1];
 	ssize_t	size_read;
 
-	tmp_buf = malloc(BUFFER_SIZE + 1);
-	if (!tmp_buf)
-	{
-		buf[0] = 0;
-		return (buf);
-	}
 	while (1)
 	{
 		size_read = read(fd, tmp_buf, BUFFER_SIZE);
@@ -62,7 +55,6 @@ static char	*read_line(int fd, char *buf, size_t buf_size)
 		if (!buf || pos_newline(tmp_buf))
 			break ;
 	}
-	free(tmp_buf);
 	return (buf);
 }
 
@@ -90,11 +82,11 @@ static char	*dup_line(char *buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*buf[OPEN_MAX];
+	static char	*buf[256];
 	size_t		buf_size;
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= OPEN_MAX)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= 256)
 		return (NULL);
 	if (buf[fd] == NULL)
 	{
